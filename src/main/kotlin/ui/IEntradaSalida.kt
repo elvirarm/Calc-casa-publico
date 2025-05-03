@@ -13,4 +13,6 @@ interface IEntradaSalida {
     fun mostrarError(msj: String)
 
     fun limpiarPantalla(numSaltos:Int)
-}
+
+    fun pausa()
+    }

@@ -1,60 +1,54 @@
 package prog2425.dam1.calcbasica
 
 import prog2425.dam1.calcbasica.app.GestorMenu
+import prog2425.dam1.calcbasica.repositorio.GestorLogs
 import prog2425.dam1.calcbasica.service.Operar
 import prog2425.dam1.calcbasica.ui.Consola
+import java.io.File
 
 fun main(args: Array<String>) {
     val consola = Consola()
     val calculadora = Operar()
 
-// TODO: Tengo que crear las funciones aún :c
-
-    when (args.size){
-        0 -> {
-            val carpetaLog = buscarCarpeta("./log")
-            if (!carpetaLog){
-                crearCarpeta()
-                consola.mostrar("Ruta ./log creada")
-            }else{
-                //mostrar la más reciente"
-            }
-        }
-        1->{
-            val carpetaEncontrada = buscarCarpeta(args[0])
-            if (!carpetaLog){
-                crearCarpeta()
-                consola.mostrar("Ruta ./log creada")
-            }
-            else if(carpetaEncontrada && file.exists()){
-                //mostrar la más reciente"
-            }
-            else{
-                consola.mostrar("No existen ficheros de Log")
-            }
-        }
-
-        4-> {
-            val rutaLog = args[0]
-            val num1 = args[1].toDouble()
-            val num2 = args[3].toDouble()
-            val operador = args[2]
-
-            val resultado = calculadora.calcular(num1, num2, operador)
-            consola.mostrar(resultado)
-            // almacenar fichero logYYYYMMDDHHMMSS.txt creado con formato val fich =
-        }
-
+    val carpetaLog = when (args.size) {
+        0 -> File("./log")
+        1 -> File(args[0])
+        4 -> File(args[0])
         else -> {
-            consola.mostrarError("Los argumentos deben ser(0,1,4)")
+            consola.mostrarError("Debe tener 0, 1 o 4 argumentos")
+            return }
+    }
+    val gestorLogs = GestorLogs(carpetaLog)
+
+    if (!carpetaLog.exists()) {
+        carpetaLog.mkdirs()
+        consola.mostrar("Ruta ${carpetaLog.path} creada")
+    }
+
+    if (args.size == 0 || args.size == 1) {
+        gestorLogs.mostrarUltimoLog(consola)
+    }
+
+    if (args.size == 4) {
+        val num1 = args[1].toDoubleOrNull()
+        val signo = args[2]
+        val num2 = args[3].toDoubleOrNull()
+        if (num1 == null || num2 == null) {
+            consola.mostrarError("Los números no son válidos")
             return
         }
+        val resultado = calculadora.calcular(num1, num2, signo)
+        if (resultado == null){
+            consola.mostrarError("Operación inválida")
+        }
+        else{
+            consola.mostrar("Resultado: $resultado")
+        }
+        gestorLogs.guardarOperacion(num1, num2, signo, resultado)
     }
 
     consola.pausa()
     consola.limpiarPantalla(20)
-    GestorMenu(consola, calculadora).iniciarCalculadora()
 
-
-
+    GestorMenu(consola, calculadora, gestorLogs).iniciarCalculadora()
 }

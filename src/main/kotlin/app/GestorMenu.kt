@@ -1,9 +1,10 @@
 package prog2425.dam1.calcbasica.app
 
+import prog2425.dam1.calcbasica.repositorio.IGestorLogs
 import prog2425.dam1.calcbasica.service.IOperaciones
 import prog2425.dam1.calcbasica.ui.IEntradaSalida
 
-class GestorMenu(val consola: IEntradaSalida, val calculadora: IOperaciones) {
+class GestorMenu(val consola: IEntradaSalida, val calculadora: IOperaciones, val gestorLogs: IGestorLogs? = null) {
 
     fun iniciarCalculadora(){
 
@@ -12,41 +13,44 @@ class GestorMenu(val consola: IEntradaSalida, val calculadora: IOperaciones) {
         val num2 = consola.pedirNum("Introduce el segundo número: ")
         val resultado = obtenerResultado(num1, num2, signo)
         mostrarResultado(resultado)
+        gestorLogs?.guardarOperacion(num1, num2, signo, resultado)
         preguntarRecalcular()
 
     }
 
-    fun obtenerResultado(num1: Double, num2: Double, signo: String): Double{
+    fun obtenerResultado(num1: Double, num2: Double, signo: String): Double?{
         return calculadora.calcular(num1, num2, signo)
     }
 
-    fun mostrarResultado(resultado: Double){
-        consola.mostrar("Resultado: $resultado")
+    fun mostrarResultado(resultado: Double?){
+        if (resultado != null){
+            consola.mostrar("Resultado: $resultado")
+        }else{
+            consola.mostrarError("Error en el cálculo")
+        }
     }
 
     fun preguntarRecalcular(){
 
-        val respuestasValidas = arrayOf("s","n")
+        val respuestasValidas = arrayOf("sí", "s", "no", "n")
+        var entradaUsuario: String
 
-        val entradaUsuario = consola.pedirInfo("¿Deseas hacer otro cálculo? (s/n)")
+        do {
+            entradaUsuario = consola.pedirInfo("¿Deseas hacer otro cálculo? (Respuestas válidas: sí / s / no / n )").trim().lowercase()
+            if (entradaUsuario !in respuestasValidas){
+                consola.mostrarError("La respuesta no es válida")
+            }
+        }while(entradaUsuario !in respuestasValidas)
 
         when (entradaUsuario){
-            "s" -> {
+
+            "sí", "s" -> {
                 consola.limpiarPantalla(20)
                 iniciarCalculadora()
             }
-            "n" -> consola.mostrar("Saliendo...")
-            else -> while(entradaUsuario !in respuestasValidas){
-
-                consola.mostrarError("La entrada debe ser s/n")
-                preguntarRecalcular()
+            "no", "n" -> consola.mostrar("Saliendo...")
         }
-
-
-
-
 
         }
 
     }
-}

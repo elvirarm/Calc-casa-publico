@@ -74,4 +74,10 @@ class Consola: IEntradaSalida {
             }
         }
     }
+
+    override fun pausa() {
+
+        mostrar("Presiona Enter para continuar...")
+        scanner.nextLine()
+    }
 }
