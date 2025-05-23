@@ -1,35 +1,34 @@
-[![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-22041afd0340ce965d47ae6ef1cefeee28c7c493a6346c4f15d667ab976d596c.svg)](https://classroom.github.com/a/6POAAJRN)
-# CalcBasica_POO
+Este proyecto es una calculadora básica que se conecta a una base de datos H2 mediante Drive Manager, crear las tablas de Error y Operacion y almacena la información.
 
-Crea una calculadora básica que pida dos números y un operador (+, -, *, /) con las operaciones de cálculo básicas: suma, resta, multiplicación y división.
+EJEMPLO DE CÓMO SE CREAN LAS TABLAS:
 
-Podéis partir del siguiente ejemplo "simple" de programación estructurada:
+https://github.com/elvirarm/Calc-casa-publico/blob/f266cde7bf1f7d9589cf7194b50f25cfeb6bc81d/src/main/kotlin/data/dao/ErrorDAO.kt#L23-L34
 
-```kotlin
-fun main() {
-    val scanner = Scanner(System.`in`)
+https://github.com/elvirarm/Calc-casa-publico/blob/f266cde7bf1f7d9589cf7194b50f25cfeb6bc81d/src/main/kotlin/data/dao/OperacionDAO.kt#L69-L84
 
-    println("Introduce el primer número:")
-    val numero1 = scanner.nextDouble()
-    println("Introduce el operador (+, -, *, /):")
-    val operador = scanner.next()[0]
-    println("Introduce el segundo número:")
-    val numero2 = scanner.nextDouble()
 
-    val resultado = when (operador) {
-        '+' -> numero1 + numero2
-        '-' -> numero1 - numero2
-        '*' -> numero1 * numero2
-        '/' -> numero1 / numero2
-        else -> "Operador no válido"
-    }
+Ambas tablas se crean al inicializarse el dao tanto de Operación como de Error que en ambos casos se instancian en el main:
 
-    println("Resultado: $resultado")
-}
-```
+https://github.com/elvirarm/Calc-casa-publico/blob/f266cde7bf1f7d9589cf7194b50f25cfeb6bc81d/src/main/kotlin/Main.kt#L11-L19
 
-* El programa debe mostrar los errores de forma controlada en consola o el resultado de la operación. Por último siempre preguntará si desea realizar otro cálculo (si contesta en positivo vuelve a realizar un nuevo cálculo, sino sale de la aplicación).
+Funciona muy parecido a la calculadora de ficheros, pero en este canso en vez de insertar una linea a través de appendText(), se hace a través de un INSERT en la tabla de la base de datos.
 
-* El proyecto debe ser de tipo "Gradle" y solucionarse mediante la POO *(utilizando los principios SOLID, en este caso básicamente DIP)*
+EJEMPLO DE CÓMO SE GUARDARÍA LA OPERACIÓN:
 
-* **Debe cumplir** La función `main()` solo puede tener una línea de código!!!
+Así sería la llamada:
+
+https://github.com/elvirarm/Calc-casa-publico/blob/f266cde7bf1f7d9589cf7194b50f25cfeb6bc81d/src/main/kotlin/app/GestorMenu.kt#L36-L38
+
+Así sería la función desarrollada:
+
+https://github.com/elvirarm/Calc-casa-publico/blob/f266cde7bf1f7d9589cf7194b50f25cfeb6bc81d/src/main/kotlin/data/dao/OperacionDAO.kt#L12-L23
+
+EJEMPLO DE CÓMO SE GUARDARÍA EL ERROR:
+
+Así sería la llamada:
+
+https://github.com/elvirarm/Calc-casa-publico/blob/f266cde7bf1f7d9589cf7194b50f25cfeb6bc81d/src/main/kotlin/app/GestorMenu.kt#L45-L48
+
+Así sería la función desarrollada:
+
+https://github.com/elvirarm/Calc-casa-publico/blob/f266cde7bf1f7d9589cf7194b50f25cfeb6bc81d/src/main/kotlin/data/dao/ErrorDAO.kt#L12-L21
