@@ -1,35 +1,36 @@
-[![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-22041afd0340ce965d47ae6ef1cefeee28c7c493a6346c4f15d667ab976d596c.svg)](https://classroom.github.com/a/6POAAJRN)
-# CalcBasica_POO
+Este proyecto se trata de una calculadora que almacena las operaciones y los errores en ficheros de texto.
 
-Crea una calculadora básica que pida dos números y un operador (+, -, *, /) con las operaciones de cálculo básicas: suma, resta, multiplicación y división.
+¿Cómo lo he hecho?
 
-Podéis partir del siguiente ejemplo "simple" de programación estructurada:
+Desde el main llamo a iniciar que es una función que según el número de argumentos que tengas hace una cosa u otra:
 
-```kotlin
-fun main() {
-    val scanner = Scanner(System.`in`)
+- 0/1 argumentos: te muestra el último log registrado e inicia la calculadora.
+- 4 hace los cálculos directamente.
 
-    println("Introduce el primer número:")
-    val numero1 = scanner.nextDouble()
-    println("Introduce el operador (+, -, *, /):")
-    val operador = scanner.next()[0]
-    println("Introduce el segundo número:")
-    val numero2 = scanner.nextDouble()
+https://github.com/elvirarm/Calc-casa-publico/blob/8ca108ed4dc18eaf243bd22e03931fa1d1864a14/src/main/kotlin/app/GestorMenu.kt#L82-L120
 
-    val resultado = when (operador) {
-        '+' -> numero1 + numero2
-        '-' -> numero1 - numero2
-        '*' -> numero1 * numero2
-        '/' -> numero1 / numero2
-        else -> "Operador no válido"
-    }
+Al iniciarCalculadora() que se repite hasta que el usuario elija la opción de salir.
 
-    println("Resultado: $resultado")
-}
-```
+https://github.com/elvirarm/Calc-casa-publico/blob/8ca108ed4dc18eaf243bd22e03931fa1d1864a14/src/main/kotlin/app/GestorMenu.kt#L9-L80
 
-* El programa debe mostrar los errores de forma controlada en consola o el resultado de la operación. Por último siempre preguntará si desea realizar otro cálculo (si contesta en positivo vuelve a realizar un nuevo cálculo, sino sale de la aplicación).
+Por cada vuelta del bucle, el programa pide:
 
-* El proyecto debe ser de tipo "Gradle" y solucionarse mediante la POO *(utilizando los principios SOLID, en este caso básicamente DIP)*
+- Primer número (debe ser un entero)
 
-* **Debe cumplir** La función `main()` solo puede tener una línea de código!!!
+- Signo (debe estar en la lista de operadores disponibles)
+
+- Segundo número (misma comprobación)
+
+Después llama a la función obtenerResultado() que llama a la calculadora para que haga el cálculo y a mostrar el resultado, después se guarda la operación.
+
+
+CÓMO SE GUARDA LA OPERACIÓN:
+
+https://github.com/elvirarm/Calc-casa-publico/blob/8ca108ed4dc18eaf243bd22e03931fa1d1864a14/src/main/kotlin/repositorio/GestorLogs.kt#L21-L33
+
+Finalmente pregunta si quieres realizar otro cálculo que devuelve un booleano y esto lo recojo en la variable que he configurado para gestionar la salida.
+
+Esto está envuelto en un try, por eso se guarda la operación, si fallase la operación en algún momento lo recogería el catch que muestra el error y además guarda el error con el mensaje de error que se haya producido en la excepción.
+
+CÓMO SE GUARDA EL ERROR:
+https://github.com/elvirarm/Calc-casa-publico/blob/8ca108ed4dc18eaf243bd22e03931fa1d1864a14/src/main/kotlin/repositorio/GestorLogs.kt#L35-L40
