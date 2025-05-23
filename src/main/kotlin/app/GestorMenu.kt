@@ -4,17 +4,40 @@ import prog2425.dam1.calcbasica.repositorio.IGestorLogs
 import prog2425.dam1.calcbasica.service.IOperaciones
 import prog2425.dam1.calcbasica.ui.IEntradaSalida
 
-class GestorMenu(val consola: IEntradaSalida, val calculadora: IOperaciones, val gestorLogs: IGestorLogs? = null) {
+class GestorMenu(val consola: IEntradaSalida, val calculadora: IOperaciones, val gestorLogs: IGestorLogs) {
 
     fun iniciarCalculadora(){
 
-        val num1 = consola.pedirNum("Introduce el primer número: ")
-        val signo = consola.pedirSigno("Introduce el operador (+, -, *, /): ")
-        val num2 = consola.pedirNum("Introduce el segundo número: ")
-        val resultado = obtenerResultado(num1, num2, signo)
-        mostrarResultado(resultado)
-        gestorLogs?.guardarOperacion(num1, num2, signo, resultado)
-        preguntarRecalcular()
+        var salir = false
+
+        while (!salir){
+            try{
+                val num1 = consola.pedirNum("Introduce el primer número: ")
+
+                val signo = consola.pedirSigno("Introduce el operador (+, -, *, /): ")
+
+                val num2 = consola.pedirNum("Introduce el segundo número: ")
+
+                val resultado = obtenerResultado(num1, num2, signo)
+                mostrarResultado(resultado)
+                gestorLogs.guardarOperacion(num1, num2, signo, resultado)
+                if(!preguntarRecalcular()){
+                    salir = true
+                }else{
+                    salir = false
+                }
+
+            }catch(e: IllegalArgumentException){
+                consola.mostrarError("${e.message}")
+                gestorLogs.guardarError("${e.message}")
+
+            }
+            catch(e:Exception){
+                consola.mostrarError("${e.message}")
+                gestorLogs.guardarError("${e.message}")
+            }
+        }
+
 
     }
 
@@ -30,7 +53,7 @@ class GestorMenu(val consola: IEntradaSalida, val calculadora: IOperaciones, val
         }
     }
 
-    fun preguntarRecalcular(){
+    fun preguntarRecalcular(): Boolean{
 
         val respuestasValidas = arrayOf("sí", "s", "no", "n")
         var entradaUsuario: String
@@ -42,15 +65,58 @@ class GestorMenu(val consola: IEntradaSalida, val calculadora: IOperaciones, val
             }
         }while(entradaUsuario !in respuestasValidas)
 
-        when (entradaUsuario){
+        return when (entradaUsuario){
 
             "sí", "s" -> {
                 consola.limpiarPantalla(20)
-                iniciarCalculadora()
+                true
             }
-            "no", "n" -> consola.mostrar("Saliendo...")
+            else -> {
+                consola.mostrar("Saliendo...")
+                false
+            }
         }
 
         }
+
+    fun iniciar(args: Array<String>){
+        try{
+            when (args.size) {
+                0, 1 -> {
+                    gestorLogs.mostrarUltimoLog(consola)
+                    consola.pausa()
+                    consola.limpiarPantalla(20)
+                    iniciarCalculadora()
+                }
+                4 -> {
+                    val num1 = args[1].toDoubleOrNull()
+                    val signo = args[2]
+                    val num2 = args[3].toDoubleOrNull()
+
+                    if (num1 == null || num2 == null) {
+                        consola.mostrarError("Los números no son válidos")
+                        return
+                    }
+
+                    val resultado = calculadora.calcular(num1, num2, signo)
+
+                    if (resultado == null) {
+                        consola.mostrarError("Operación inválida")
+                    } else {
+                        consola.mostrar("Resultado: $resultado")
+                    }
+
+                    gestorLogs.guardarOperacion(num1, num2, signo, resultado)
+                }
+            }
+        }catch(e: IllegalArgumentException){
+            consola.mostrarError("${e.message}")
+            gestorLogs.guardarError("${e.message}")
+        }
+        catch (e:Exception){
+            consola.mostrarError("${e.message}")
+            gestorLogs.guardarError("${e.message}")
+        }
+    }
 
     }

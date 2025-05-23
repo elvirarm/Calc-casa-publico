@@ -6,6 +6,10 @@ class GestorCarpetas : IGestionCarpetas {
 
     private val carpeta = File("./log")
 
+    override fun obtenerCarpetaLogs(): File {
+        return carpeta
+    }
+
     override fun buscarCarpeta(rutaCarpeta: String): Boolean {
         return carpeta.exists()
     }

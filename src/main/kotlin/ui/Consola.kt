@@ -13,26 +13,19 @@ class Consola: IEntradaSalida {
 
     override fun pedirNum(msj: String): Double {
 
-        var numCorrecto = false
-        var num = 0.0
-
-        do {
+        val numero: Double
+        try{
             mostrar(msj)
-            try {
-                num = scanner.nextDouble()
-                numCorrecto = true
-            } catch (e: InputMismatchException) {
-                mostrarError("Debes introducir un número")
-                scanner.nextLine()
-            }catch(e: Exception){
-                mostrarError("No se ha podido calcular")
-                scanner.nextLine()
-            }
-
-        } while (!numCorrecto)
-
-        return num
+            numero = scanner.nextDouble()
+        }catch (e: NumberFormatException){
+            throw NumberFormatException("Introduce un número váido")
+        }catch (e: InputMismatchException){
+            scanner.nextLine()
+            throw java.lang.IllegalArgumentException("Introduce un número válido")
+        }
+        return numero
     }
+
 
     override fun pedirSigno(msj: String): String {
 

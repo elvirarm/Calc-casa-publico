@@ -4,6 +4,8 @@ import java.io.File
 
 interface IGestionCarpetas {
 
+    fun obtenerCarpetaLogs(): File
+
     fun buscarCarpeta(rutaCarpeta: String): Boolean
 
     fun crearCarpeta(): Boolean
