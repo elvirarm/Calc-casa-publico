@@ -2,7 +2,7 @@ package prog2425.dam1.calcbasica.ui
 
 interface IEntradaSalida {
 
-    fun pedirNum(msj: String = "Introduce un número"): Double
+    fun pedirNum(msj: String = "Introduce un número"): Double?
 
     fun pedirSigno(msj: String = "Introduce un operador"): String
 
